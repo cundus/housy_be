@@ -3,13 +3,14 @@ const route = Router();
 
 // Controller
 const { users, deleteUser } = require("../controller/users");
-const { register } = require("../controller/auth");
-const { auth } = require("../../middleware/auth");
+const { register, signIn } = require("../controller/auth");
 // Middleware
+const { auth } = require("../../middleware/auth");
 
 //USER & AUTH
 route.get("/users", users);
 route.delete("/users/:id", deleteUser);
 route.post("/signup", register);
+route.post("/signin", signIn);
 
 module.exports = route;

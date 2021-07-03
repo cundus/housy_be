@@ -59,7 +59,6 @@ exports.register = async (req, res) => {
       },
       secretKey
     );
-    console.log("INI TOKEN   ", token);
     res.send({
       status: "success",
       data: {
@@ -71,7 +70,6 @@ exports.register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("orrrrrrRAAA", error);
     res.send({
       status: "failed",
       message: "Server Error",
@@ -82,5 +80,66 @@ exports.register = async (req, res) => {
 exports.signIn = async (req, res) => {
   try {
     const { username, password } = req.body;
-  } catch (error) {}
+    const data = req.body;
+    const signIn = joi.object({
+      username: joi.string().min(4).required(),
+      password: joi.string().min(8).required(),
+    });
+
+    const { error } = signIn.validate(data);
+
+    if (error) {
+      return res.send({
+        status: "failed",
+        messsage: error.details[0].message,
+      });
+    }
+
+    const checkUsername = await user.findOne({
+      where: {
+        username,
+      },
+    });
+
+    if (!checkUsername) {
+      return res.send({
+        status: "failed",
+        message: `Username or Password doesn't match`,
+      });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, checkUsername.password);
+
+    if (!isValidPassword) {
+      return res.send({
+        status: "failed",
+        message: `Email or Password doesn't match`,
+      });
+    }
+
+    const secretKey = process.env.SECRET_KEY;
+    const token = jwt.sign(
+      {
+        id: checkUsername.id,
+      },
+      secretKey
+    );
+
+    res.send({
+      status: "success",
+      data: {
+        user: {
+          fullname: checkUsername.fullname,
+          email: checkUsername.email,
+          token,
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "Failed!",
+      message: "Server Error!",
+    });
+  }
 };
