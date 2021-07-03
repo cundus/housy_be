@@ -13,7 +13,7 @@ exports.users = async (req, res) => {
         },
       },
       attributes: {
-        exclude: ["password", "createdAt", "updatedAt"],
+        exclude: ["role_id", "password", "createdAt", "updatedAt"],
       },
     });
 

@@ -1,7 +1,11 @@
 const { Router } = require("express");
+const route = Router();
+
+// Controller
 const { users, deleteUser } = require("../controller/users");
 const { register } = require("../controller/auth");
-const route = Router();
+const { auth } = require("../../middleware/auth");
+// Middleware
 
 //USER & AUTH
 route.get("/users", users);

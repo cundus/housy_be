@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
       username: joi.string().min(4).required(),
       email: joi.string().email().required(),
       password: joi.string().min(8).required(),
-      listAsId: joi.string().min(1).required(),
+      listAsId: joi.number().min(1).required(),
       gender: joi.string().required(),
       address: joi.string().min(10).required(),
     });
@@ -47,23 +47,40 @@ exports.register = async (req, res) => {
 
     const dataUser = await user.create({
       ...data,
+      role_id: req.body.listAsId,
       password: hashedPassword,
     });
 
+    console.log(dataUser);
+    const secretKey = process.env.SECRET_KEY;
+    const token = jwt.sign(
+      {
+        id: dataUser.id,
+      },
+      secretKey
+    );
+    console.log("INI TOKEN   ", token);
     res.send({
       status: "success",
       data: {
         user: {
           fullname: dataUser.fullname,
           email: dataUser.email,
+          token,
         },
       },
     });
   } catch (error) {
-    console.log(error);
+    console.log("orrrrrrRAAA", error);
     res.send({
       status: "failed",
       message: "Server Error",
     });
   }
+};
+
+exports.signIn = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+  } catch (error) {}
 };
