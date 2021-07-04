@@ -15,7 +15,7 @@ exports.auth = (req, res, next) => {
 
     const secretKey = process.env.SECRET_KEY;
 
-    const verfied = jwt.verify(token, secretKey, (error, decoded) => {
+    const verified = jwt.verify(token, secretKey, (error, decoded) => {
       if (error) {
         return res.send({
           status: "failed",
@@ -30,10 +30,10 @@ exports.auth = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(error);
+    console.log("MIDDLEWARE", error);
     res.send({
       status: "failed",
-      message: "Server Error",
+      message: "Server Error Middleware",
     });
   }
 };
