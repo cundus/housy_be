@@ -35,7 +35,7 @@ exports.register = async (req, res) => {
     });
 
     if (checkEmail) {
-      return res.send({
+      return res.status(200).send({
         status: "failed",
         message: "Email Sudah Terregister",
       });
@@ -59,7 +59,7 @@ exports.register = async (req, res) => {
       },
       secretKey
     );
-    res.send({
+    res.status(200).send({
       status: "success",
       data: {
         user: {
@@ -71,7 +71,7 @@ exports.register = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.send({
+    res.status(400).send({
       status: "failed",
       message: "Server Error",
     });

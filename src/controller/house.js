@@ -75,7 +75,22 @@ exports.getProperty = async (req, res) => {
     res.send({
       status: "True",
       message: "Success",
-      data: { getPropertyById },
+      data: {
+        data: {
+          id: getPropertyById.id,
+          name: getPropertyById.name,
+          city: {
+            id: getPropertyById.city.id,
+            name: getPropertyById.city.name,
+          },
+          address: getPropertyById.address,
+          price: getPropertyById.price,
+          typeRent: getPropertyById.typeRent,
+          ameneties: getPropertyById.amenities.split(","),
+          bedroom: getPropertyById.bedroom,
+          bathroom: getPropertyById.bathroom,
+        },
+      },
     });
   } catch (error) {
     console.log(error);
@@ -94,7 +109,7 @@ exports.addProperties = async (req, res) => {
 
     const propertyDataAdded = await Property.findOne({
       where: {
-        name: req.body.name,
+        createdAt: req.body.createdAt,
       },
       include: {
         model: City,
