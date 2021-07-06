@@ -15,28 +15,16 @@ exports.getProperties = async (req, res) => {
       },
     });
 
-    const propertyMap = dataProperties.map((item) => {
-      return {
-        id: item.id,
-        name: item.name,
-        address: item.address,
-        price: item.price,
-        typeRent: item.typeRent,
-        amenities: item.amenities.split(","),
-        bedroom: item.bedroom,
-        bathroom: item.bathroom,
-        city: {
-          id: item.city.id,
-          name: item.city.name,
-        },
-      };
+    // dataProperties = JSON.parse(JSON.stringify(dataProperties));
+    dataProperties = dataProperties.map((item) => {
+      // ...item,
+      item.amenities = item.amenities.split(",");
+      return item;
     });
 
     res.send({
       status: "Success!",
-      data: {
-        propertyMap,
-      },
+      data: dataProperties,
     });
   } catch (error) {
     console.log(error);
@@ -109,7 +97,7 @@ exports.addProperties = async (req, res) => {
 
     const propertyDataAdded = await Property.findOne({
       where: {
-        createdAt: req.body.createdAt,
+        name: req.body.name,
       },
       include: {
         model: City,
